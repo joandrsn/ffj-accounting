@@ -1,0 +1,10 @@
+﻿"Company Information";"Organisation Name";"Organisation ID";"Organisation Country"
+"Company Information";"Abba I/S";12345678;"DK"
+"Monthly Total";"Month";"Year";"Transaction Amount";"Subscription Fees";"Service Fees";"Chargeback";"Adjustments";"Settled";"Currency"
+"Monthly Total";"October";"2023";123,98;-32,00;-40,04;0,00;0,00;543,94;"DKK"
+"Monthly Total";"September";"2023";123,40;0,00;-42,81;0,00;0,00;543,59;"DKK"
+"Settlement Information";"Date";"Acquirer";"Transaction Amount";"Subscription Fees";"Service Fees";"Chargeback / Adjustment";"Settled";"Currency";"Bank Account";"Payment Reference";"Number Of Transactions";"Number Of Batches";"Chargeback Amount";"Adjustment Amount"
+"Settlement Information";09-10-2023;"Dankort";3571,68;0,00;0,00;0,00;3571,68;"DKK";"0400 1234567891 ";"DKFLX 05.10";8;1;0,00;0,00
+"Settlement Information";09-10-2023;"Dankort";2857,52;0,00;0,00;0,00;2857,52;"DKK";"0400 1234567891 ";"DKFLX 06.10";6;1;0,00;0,00
+"Settlement Information";08-10-2023;"International Cards";926,88;0,00;-10,95;0,00;915,93;"DKK";"DK 24 0400 1234567891";"Nets 0153 8650061";3;1;0,00;0,00
+"Settlement Information";08-10-2023;"International Cards";325,00;0,00;-3,81;0,00;321,19;"DKK";"DK 24 0400 1234567891";"Nets 0154 8650061";1;1;0,00;0,00
