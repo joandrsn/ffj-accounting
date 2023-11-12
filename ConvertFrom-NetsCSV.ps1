@@ -38,7 +38,30 @@ $data = Get-Content $openFileDialog.FileName | ForEach-Object {
 }
 $data = $data | Where-Object { $PSItem."Service Fees" -lt 0 -or $PSItem."Subscription Fees" -lt 0 }
 [array]::Reverse($data)
-$documentno = 1
+
+$folder = Join-Path "$env:APPDATA" "ffj-accounting"
+if (-not (Test-Path $folder)) {
+  $null = New-Item -Path $folder -ItemType Directory
+}
+$docnofile = Join-Path $folder "bank.txt"
+if (-not (Test-Path $docnofile)) {
+  $null = New-Item -Path $docnofile -ItemType File
+}
+$nextdocno = Get-Content $docnofile
+if (-not $nextdocno) {
+  $nextdocno = 1
+}
+$prompttext = "Hvad er næste bilagsnr.?`nForslag: {0}`nTryk Enter for at acceptere, ellers skriv hvad næste bilagsnr. skal være og tryk enter." -f $nextdocno
+$promptvalue = Read-Host -Prompt $prompttext
+if([string]::IsNullOrWhiteSpace($promptvalue))
+{
+    $documentNo = $nextdocno
+}
+else
+{
+    $documentNo = [int]$promptvalue
+}
+
 $finaldata = $data | ForEach-Object {
     $description = $PSItem."Payment Reference"
     if ($PSItem.Acquirer -eq "International Cards") {
@@ -55,6 +78,8 @@ $finaldata = $data | ForEach-Object {
     }
     $documentno += 1
 }
+
+Set-Content $docnofile $documentNo
 
 $filename = "kreditkort-gebyrer_{0}.csv" -f $finaldata[0].Date
 

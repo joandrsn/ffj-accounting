@@ -12,11 +12,34 @@ if ($openFileDialog.ShowDialog() -ne "OK") {
 $headers = "Date", "Description", "Amount"
 $data = Import-Excel $openFileDialog.FileName -StartRow 6 -AsDate "Date" -HeaderName $headers
 
-$documentNo = 1
+$folder = Join-Path "$env:APPDATA" "ffj-accounting"
+if (-not (Test-Path $folder)) {
+  $null = New-Item -Path $folder -ItemType Directory
+}
+$docnofile = Join-Path $folder "bank.txt"
+if (-not (Test-Path $docnofile)) {
+  $null = New-Item -Path $docnofile -ItemType File
+}
+$nextdocno = Get-Content $docnofile
+if (-not $nextdocno) {
+  $nextdocno = 1
+}
+$prompttext = "Hvad er næste bilagsnr.?`nForslag: {0}`nTryk Enter for at acceptere, ellers skriv hvad næste bilagsnr. skal være og tryk enter." -f $nextdocno
+$promptvalue = Read-Host -Prompt $prompttext
+if([string]::IsNullOrWhiteSpace($promptvalue))
+{
+    $documentNo = $nextdocno
+}
+else
+{
+    $documentNo = [int]$promptvalue
+}
+
 $data = $data | Where-Object {
   $PSItem.Description -notlike "DKFLX*" -and
   $PSItem.Description -ne "FI89136954,INDB.KA71" -and
-  $PSItem.Description -notlike "Nets * 8650061"
+  $PSItem.Description -notlike "Nets * 8650061" -and 
+  $PSItem.Description -ne "danmark"
 } | Sort-Object -Property "Date" | ForEach-Object {
   [PSCustomObject]@{
     "Date"        = $PSItem.Date.ToString("dd-MM-yyyy")
@@ -25,6 +48,8 @@ $data = $data | Where-Object {
     "Document No" = $documentNo++
   }
 }
+
+Set-Content $docnofile $documentNo
 
 $filename = "bank_udtog_{0}.csv" -f $data[0].Date
 
